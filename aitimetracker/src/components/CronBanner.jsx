@@ -3,22 +3,17 @@ export default function CronBanner({ result, onDismiss }) {
 
   return (
     <div style={{
-      background: "#F59E0B18", border: "1px solid #F59E0B44",
-      borderRadius: 10, padding: "14px 18px", marginBottom: 24,
+      background: "var(--warn-bg)", border: "1px solid var(--warn)",
+      borderRadius: 10, padding: "14px 18px", marginBottom: 20,
+      animation: "fadeSlide 0.15s ease",
     }}>
-      <p style={{
-        fontFamily: "Inter, sans-serif", fontSize: 13,
-        color: "#F59E0B", fontWeight: 600, marginBottom: 8,
-      }}>
+      <p style={{ fontSize: 13, color: "var(--warn)", fontWeight: 600, marginBottom: 8 }}>
         {result.message}
       </p>
       {result.activated.map((a) => (
         <div key={a.id} style={{ marginBottom: 4 }}>
           {a.activatedServices.map((s, i) => (
-            <p key={i} style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 12, color: "#9CA3AF",
-            }}>
+            <p key={i} style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-muted)" }}>
               → {s.message}
             </p>
           ))}
@@ -26,9 +21,10 @@ export default function CronBanner({ result, onDismiss }) {
       ))}
       <button onClick={onDismiss} style={{
         marginTop: 8, background: "none", border: "none",
-        color: "#6B7280", fontSize: 11, cursor: "pointer",
-        fontFamily: "Inter, sans-serif",
-      }}>Dismiss</button>
+        color: "var(--text-faint)", fontSize: 11, cursor: "pointer",
+      }}>
+        Dismiss
+      </button>
     </div>
   );
 }

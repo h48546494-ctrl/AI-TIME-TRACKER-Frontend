@@ -1,26 +1,37 @@
-import { useState, useEffect, useCallback } from "react";
-import { fetchAllEmails, saveEmail, removeEmail, triggerExpiryCheck } from "../services/api";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import {
+  fetchAllEmails, fetchActiveEmails, fetchInactiveEmails,
+  saveEmail, removeEmail, triggerExpiryCheck, removeDuplicateEmails,
+} from "../services/api";
 
 export function useEmails(toast) {
   const [emails, setEmails]           = useState([]);
+  const [filterMode, setFilterMode]   = useState("all"); // 'all' | 'active' | 'inactive'
   const [fetching, setFetching]       = useState(true);
   const [saving, setSaving]           = useState(false);
   const [deleting, setDeleting]       = useState(null);
   const [cronLoading, setCronLoading] = useState(false);
   const [cronResult, setCronResult]   = useState(null);
+  const [removingDuplicates, setRemovingDuplicates] = useState(false);
 
-  const loadEmails = useCallback(async () => {
+  const loadEmails = useCallback(async (mode = filterMode) => {
+    setFetching(true);
     try {
-      const data = await fetchAllEmails();
+      const fetcher = mode === "active" ? fetchActiveEmails
+        : mode === "inactive" ? fetchInactiveEmails
+        : fetchAllEmails;
+      const data = await fetcher();
       setEmails(data);
     } catch (e) {
       toast(e.message, "error");
     } finally {
       setFetching(false);
     }
-  }, [toast]);
+  }, [toast, filterMode]);
 
-  useEffect(() => { loadEmails(); }, [loadEmails]);
+  useEffect(() => { loadEmails(filterMode); }, [filterMode]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const changeFilter = (mode) => setFilterMode(mode);
 
   const handleSave = async (payload) => {
     setSaving(true);
@@ -65,10 +76,31 @@ export function useEmails(toast) {
     }
   };
 
+  const handleRemoveDuplicates = async () => {
+    setRemovingDuplicates(true);
+    try {
+      const data = await removeDuplicateEmails();
+      toast(data.message, data.removed?.length ? "warn" : "success");
+      await loadEmails();
+    } catch (e) {
+      toast(e.message, "error");
+    } finally {
+      setRemovingDuplicates(false);
+    }
+  };
+
+  const counts = useMemo(() => {
+    const active = emails.filter((e) => e.claudeTime || e.geminiTime).length;
+    return { total: emails.length, active, inactive: emails.length - active };
+  }, [emails]);
+
   return {
-    emails, fetching,
+    emails, fetching, loadEmails,
+    filterMode, changeFilter,
     saving, handleSave,
     deleting, handleDelete,
     cronLoading, cronResult, setCronResult, handleCron,
+    removingDuplicates, handleRemoveDuplicates,
+    counts,
   };
 }

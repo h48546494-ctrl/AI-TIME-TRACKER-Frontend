@@ -1,0 +1,92 @@
+:root {
+  --bg:            #FFFFFF;
+  --panel:         #FAFAFA;
+  --panel-raised:  #FFFFFF;
+  --border:        #E4E4E7;
+  --border-strong: #D4D4D8;
+  --text:          #18181B;
+  --text-muted:    #71717A;
+  --text-faint:    #A1A1AA;
+  --accent:        #18181B;
+  --accent-fg:     #FAFAFA;
+  --accent-hover:  #27272A;
+  --success:       #16A34A;
+  --success-bg:    #16A34A14;
+  --danger:        #DC2626;
+  --danger-bg:     #DC262614;
+  --warn:          #D97706;
+  --warn-bg:       #D9770614;
+  --claude-dot:    #18181B;
+  --gemini-dot:    #71717A;
+  --shadow:        0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
+  --shadow-lg:      0 4px 12px rgba(0,0,0,0.08), 0 24px 48px rgba(0,0,0,0.12);
+  --radius:        8px;
+  --font-ui:       'Inter', -apple-system, sans-serif;
+  --font-mono:     'JetBrains Mono', 'SF Mono', monospace;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg:            #09090B;
+  --panel:         #0F0F11;
+  --panel-raised:  #18181B;
+  --border:        #27272A;
+  --border-strong: #3F3F46;
+  --text:          #FAFAFA;
+  --text-muted:    #A1A1AA;
+  --text-faint:    #71717A;
+  --accent:        #FAFAFA;
+  --accent-fg:     #18181B;
+  --accent-hover:  #E4E4E7;
+  --success:       #22C55E;
+  --success-bg:    #22C55E1A;
+  --danger:        #F87171;
+  --danger-bg:     #F871711A;
+  --warn:          #FBBF24;
+  --warn-bg:       #FBBF241A;
+  --claude-dot:    #FAFAFA;
+  --gemini-dot:    #A1A1AA;
+  --shadow:        0 1px 2px rgba(0,0,0,0.2), 0 8px 24px rgba(0,0,0,0.4);
+  --shadow-lg:      0 4px 16px rgba(0,0,0,0.3), 0 24px 48px rgba(0,0,0,0.5);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
+
+button { font-family: var(--font-ui); }
+button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.97) translateY(6px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
